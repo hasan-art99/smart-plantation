@@ -18,7 +18,8 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         /* TEMA PREMIUM MODERN - KHAS PERKEBUNAN SAWIT ASP */
         :root {
@@ -567,21 +568,57 @@
                 renderGridTable(e.target.value);
             });
         };
+// Inisialisasi Firebase dengan Kunci Proyek ASP
+const firebaseConfig = {
+    apiKey: "AIzaSyCNdVwG-sTYoQZjoNUsKwuaK392qu2k1_c",
+    authDomain: "asp-smart-plantation.firebaseapp.com",
+    databaseURL: "https://asp-smart-plantation-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "asp-smart-plantation",
+    storageBucket: "asp-smart-plantation.firebasestorage.app",
+    messagingSenderId: "851802097305",
+    appId: "1:851802097305:web:0d0194a6100262032f5a08",
+    measurementId: "G-JNCDF4YG55"
+};
 
-        function loadBulanData() {
-            currentBulanKey = document.getElementById("filterBulan").value;
-            const savedRotasi = localStorage.getItem(`ASP_ROTASI_${currentBulanKey}`);
-            const savedPanen = localStorage.getItem(`ASP_PANEN_${currentBulanKey}`);
+// Cegah inisialisasi ulang jika aplikasi me-refresh halaman
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 
-            stateRotasiAwal = savedRotasi ? JSON.parse(savedRotasi) : {};
-            stateTitikPanen = savedPanen ? JSON.parse(savedPanen) : {};
-
-            dataBlokKebun.forEach(b => {
-                if (stateRotasiAwal[b.id] === undefined) stateRotasiAwal[b.id] = 13;
-                if (!stateTitikPanen[b.id]) stateTitikPanen[b.id] = Array(32).fill(null);
-            });
-            renderGridTable();
-        }
+// Fungsi Pembacaan Data Online dari Server Firebase
+function loadBulanData() {
+    currentBulanKey = document.getElementById("filterBulan").value; // Mengambil "2026-06"
+    
+    const dbRef = firebase.database().ref(`ASP_PLANTATION/${currentBulanKey}`);
+    
+    dbRef.once('value').then((snapshot) => {
+        const data = snapshot.val() || {};
+        
+        stateRotasiAwal = data.rotasiAwal || {};
+        stateTitikPanen = data.titikPanen || {};
+        
+        dataBlokKebun.forEach(b => {
+            if (stateRotasiAwal[b.id] === undefined) stateRotasiAwal[b.id] = 13;
+            if (!stateTitikPanen[b.id]) stateTitikPanen[b.id] = Array(32).fill(null);
+        });
+        
+        renderGridTable();
+    }).catch((error) => {
+        console.error("Gagal mengambil data dari Firebase: ", error);
+    });
+}
+        // Proteksi otomatis jika ada blok kebun baru yang belum terisi data di Firebase
+        dataBlokKebun.forEach(b => {
+            if (stateRotasiAwal[b.id] === undefined) stateRotasiAwal[b.id] = 13;
+            if (!stateTitikPanen[b.id]) stateTitikPanen[b.id] = Array(32).fill(null);
+        });
+        
+        // Gambar ulang tabel lingkaran hijau-kuning di layar HP/Laptop
+        renderGridTable();
+    }).catch((error) => {
+        console.error("Gagal mengambil data dari Firebase: ", error);
+    });
+}
 
         function saveBulanData() {
             localStorage.setItem(`ASP_ROTASI_${currentBulanKey}`, JSON.stringify(stateRotasiAwal));

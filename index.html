@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASP Smart Plantation - Modul Rotasi Divisi C</title>
     
+    <!-- Pustaka External & Firebase SDK -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -245,7 +246,7 @@
             margin: 0;
         }
 
-        /* STATE WARNA */
+        /* STATE WARNA KONDISI */
         .status-harvest .bubble-wrapper {
             background: linear-gradient(135deg, #22c55e 0%, #166534 100%) !important;
             box-shadow: 0 2px 6px rgba(34, 197, 94, 0.2);
@@ -414,6 +415,7 @@
         </div>
     </div>
 
+    <!-- MODAL REKAP PRODUKSI -->
     <div class="modal-overlay" id="modalInput">
         <div class="modal-container">
             <div class="modal-header">
@@ -453,7 +455,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn-sawit btn-sawit-light" onclick="closeModal()">Batal</button>
-                <button class="btn-sawit btn-sawit-primary" onclick="saveForm()">Simpan Berkas</button>
+                <button class="btn-sawit btn-sawit-success" onclick="saveForm()">Simpan Berkas</button>
             </div>
         </div>
     </div>
@@ -504,7 +506,7 @@
         let stateRotasiAwal = {};
         let stateTitikPanen = {};
 
-        // CONFIG UTUH FIREBASE Cloud
+        // FIREBASE UTUH CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyCNdVwG-sTYoQZjoNUsKwuaK392qu2k1_c",
             authDomain: "asp-smart-plantation.firebaseapp.com",
@@ -535,7 +537,7 @@
             });
         };
 
-        // AMBIL DATA ONLINE DARI FIREBASE
+        // FUNGSI LOAD DATA ONLINE (SUDAH DIPERBAIKI SINTAKSNYA)
         function loadBulanData() {
             currentBulanKey = document.getElementById("filterBulan").value;
             const dbRef = firebase.database().ref(`ASP_PLANTATION/${currentBulanKey}`);
@@ -556,7 +558,7 @@
             });
         }
 
-        // AUTO-SAVE DATA LANGSUNG ONLINE KE CLOUD FIREBASE
+        // FUNGSI AUTO-SAVE LANGSUNG KE FIREBASE CLOUD
         function saveBulanData() {
             const dbRef = firebase.database().ref(`ASP_PLANTATION/${currentBulanKey}`);
             dbRef.set({
@@ -653,16 +655,6 @@
             }
             saveBulanData();
             kalkulasiOtomatisSistem();
-        }
-
-        function columnToLetter(column) {
-            let temp, letter = '';
-            while (column > 0) {
-                temp = (column - 1) % 26;
-                letter = String.fromCharCode(65 + temp) + letter;
-                column = (column - temp - 1) / 26;
-            }
-            return letter;
         }
 
         function kalkulasiOtomatisSistem() {

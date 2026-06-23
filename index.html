@@ -1,15 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ASP Smart Plantation</title>
-  <style>
-
-  </style>
-</head>
-<body>
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -20,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
     <style>
         /* TEMA PREMIUM MODERN - KHAS PERKEBUNAN SAWIT ASP */
         :root {
@@ -33,10 +23,8 @@
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border: #e2e8f0;
-            
-            /* Warna khusus Header */
-            --header-bg: #facc15; /* Kuning */
-            --header-text: #000000; /* Hitam */
+            --header-bg: #facc15; 
+            --header-text: #000000; 
         }
 
         * {
@@ -45,7 +33,6 @@
             padding: 0;
         }
 
-        /* PAKSA LANDSCAPE FULL SCREEN ANTI-SCROLL UTAMA */
         html, body {
             width: 100vw;
             height: 100vh;
@@ -57,7 +44,6 @@
             flex-direction: column;
         }
 
-        /* TOPBAR NAVIGATION */
         .topbar {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
@@ -89,7 +75,6 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* CONTAINER UTAMA MENGISI SISA LAYAR */
         .container {
             padding: 12px 20px;
             flex: 1;
@@ -99,7 +84,6 @@
             min-height: 0; 
         }
 
-        /* PANEL FILTER & KONTROL */
         .filter-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -162,11 +146,6 @@
             transition: all 0.2s;
         }
 
-        .btn-sawit-primary {
-            background: var(--primary);
-            color: white;
-        }
-
         .btn-sawit-success {
             background: #16a34a;
             color: white;
@@ -178,33 +157,13 @@
             color: var(--text-main);
         }
 
-        /* GRID AREA TABEL MATRIKS */
-        .matrix-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            min-height: 0; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-        }
-
-        .matrix-instruction {
-            background: #f8fafc;
-            padding: 8px 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 500;
-            flex-shrink: 0;
-        }
-
         .table-scroll-area {
             flex: 1;
             overflow: auto; 
             min-height: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
         }
 
         table {
@@ -222,7 +181,6 @@
             vertical-align: middle;
         }
 
-        /* STYLING HEADER BERWARNA KUNING & FONT HITAM */
         th {
             background: var(--header-bg) !important;
             color: var(--header-text) !important;
@@ -235,14 +193,13 @@
             border-bottom: 2px solid #e2e8f0;
         }
 
-        /* FITUR STICKY COLUMNS - MENGUNCI 5 KOLOM INFORMASI UTAMA */
+        /* FITUR STICKY COLUMNS */
         .st-col-1 { position: sticky; left: 0; z-index: 5; background: #ffffff; min-width: 80px; font-weight: 700; color: var(--text-main); }
         .st-col-2 { position: sticky; left: 80px; z-index: 5; background: #ffffff; min-width: 70px; color: #64748b; }
         .st-col-3 { position: sticky; left: 150px; z-index: 5; background: #ffffff; min-width: 70px; color: #64748b; }
         .st-col-4 { position: sticky; left: 220px; z-index: 5; background: #ffffff; min-width: 60px; color: #64748b; }
         .st-col-5 { position: sticky; left: 280px; z-index: 5; background: #ffffff; min-width: 80px; font-weight: 600; color: #1e293b; border-right: 2px solid var(--border) !important; }
 
-        /* Aturan background header sticky agar tetap mengikuti warna kuning */
         th.st-col-1, th.st-col-2, th.st-col-3, th.st-col-4, th.st-col-5 {
             z-index: 15;
             background: var(--header-bg) !important;
@@ -255,7 +212,6 @@
             user-select: none;
         }
 
-        /* PEMBUNGKUS BULAT UTAMA */
         .bubble-wrapper {
             width: 28px;
             height: 28px;
@@ -268,7 +224,6 @@
             transition: all 0.15s ease;
         }
 
-        /* INPUT DI TANGGAL 1 */
         .input-rotasi-awal {
             width: 100%;
             height: 100%;
@@ -389,7 +344,6 @@
             border-top: 1px solid var(--border);
         }
 
-        /* TOAST ALERT NOTIFICATION */
         .toast-popup {
             position: fixed;
             bottom: 20px;
@@ -404,7 +358,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
@@ -421,7 +374,6 @@
     </header>
 
     <div class="container">
-        
         <div class="filter-card">
             <div class="search-box-wrapper">
                 <input type="text" id="searchBlok" class="input-control" placeholder="Ketik Kode Blok (Contoh: SN-6, SO-12)...">
@@ -445,23 +397,21 @@
                 <button class="btn-sawit btn-sawit-success" onclick="exportKeExcelBerwarna()">📥 Export Excel</button>
             </div>
         </div>
-            <div class="table-scroll-area">
-                <table id="mainTable">
-                    <thead>
-                        <tr id="headerDatesRow">
-                            <th class="st-col-1">Kode Blok</th>
-                            <th class="st-col-2">Thn Tanam</th>
-                            <th class="st-col-3">Luas (Ha)</th>
-                            <th class="st-col-4">SPH</th>
-                            <th class="st-col-5">Pokok</th>
-                            </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        </tbody>
-                </table>
-            </div>
-        </div>
 
+        <div class="table-scroll-area">
+            <table id="mainTable">
+                <thead>
+                    <tr id="headerDatesRow">
+                        <th class="st-col-1">Kode Blok</th>
+                        <th class="st-col-2">Thn Tanam</th>
+                        <th class="st-col-3">Luas (Ha)</th>
+                        <th class="st-col-4">SPH</th>
+                        <th class="st-col-5">Pokok</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <div class="modal-overlay" id="modalInput">
@@ -554,6 +504,22 @@
         let stateRotasiAwal = {};
         let stateTitikPanen = {};
 
+        // CONFIG UTUH FIREBASE Cloud
+        const firebaseConfig = {
+            apiKey: "AIzaSyCNdVwG-sTYoQZjoNUsKwuaK392qu2k1_c",
+            authDomain: "asp-smart-plantation.firebaseapp.com",
+            databaseURL: "https://asp-smart-plantation-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "asp-smart-plantation",
+            storageBucket: "asp-smart-plantation.firebasestorage.app",
+            messagingSenderId: "851802097305",
+            appId: "1:851802097305:web:0d0194a6100262032f5a08",
+            measurementId: "G-JNCDF4YG55"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
         window.onload = function() {
             const headerRow = document.getElementById("headerDatesRow");
             for(let d=1; d<=31; d++) {
@@ -568,61 +534,39 @@
                 renderGridTable(e.target.value);
             });
         };
-// Inisialisasi Firebase dengan Kunci Proyek ASP
-const firebaseConfig = {
-    apiKey: "AIzaSyCNdVwG-sTYoQZjoNUsKwuaK392qu2k1_c",
-    authDomain: "asp-smart-plantation.firebaseapp.com",
-    databaseURL: "https://asp-smart-plantation-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "asp-smart-plantation",
-    storageBucket: "asp-smart-plantation.firebasestorage.app",
-    messagingSenderId: "851802097305",
-    appId: "1:851802097305:web:0d0194a6100262032f5a08",
-    measurementId: "G-JNCDF4YG55"
-};
 
-// Cegah inisialisasi ulang jika aplikasi me-refresh halaman
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
+        // AMBIL DATA ONLINE DARI FIREBASE
+        function loadBulanData() {
+            currentBulanKey = document.getElementById("filterBulan").value;
+            const dbRef = firebase.database().ref(`ASP_PLANTATION/${currentBulanKey}`);
+            
+            dbRef.once('value').then((snapshot) => {
+                const data = snapshot.val() || {};
+                stateRotasiAwal = data.rotasiAwal || {};
+                stateTitikPanen = data.titikPanen || {};
+                
+                dataBlokKebun.forEach(b => {
+                    if (stateRotasiAwal[b.id] === undefined) stateRotasiAwal[b.id] = 13;
+                    if (!stateTitikPanen[b.id]) stateTitikPanen[b.id] = Array(32).fill(null);
+                });
+                
+                renderGridTable();
+            }).catch((error) => {
+                console.error("Gagal mengambil data dari Firebase: ", error);
+            });
+        }
 
-// Fungsi Pembacaan Data Online dari Server Firebase
-function loadBulanData() {
-    currentBulanKey = document.getElementById("filterBulan").value; // Mengambil "2026-06"
-    
-    const dbRef = firebase.database().ref(`ASP_PLANTATION/${currentBulanKey}`);
-    
-    dbRef.once('value').then((snapshot) => {
-        const data = snapshot.val() || {};
-        
-        stateRotasiAwal = data.rotasiAwal || {};
-        stateTitikPanen = data.titikPanen || {};
-        
-        dataBlokKebun.forEach(b => {
-            if (stateRotasiAwal[b.id] === undefined) stateRotasiAwal[b.id] = 13;
-            if (!stateTitikPanen[b.id]) stateTitikPanen[b.id] = Array(32).fill(null);
-        });
-        
-        renderGridTable();
-    }).catch((error) => {
-        console.error("Gagal mengambil data dari Firebase: ", error);
-    });
-}
-        // Proteksi otomatis jika ada blok kebun baru yang belum terisi data di Firebase
-        dataBlokKebun.forEach(b => {
-            if (stateRotasiAwal[b.id] === undefined) stateRotasiAwal[b.id] = 13;
-            if (!stateTitikPanen[b.id]) stateTitikPanen[b.id] = Array(32).fill(null);
-        });
-        
-        // Gambar ulang tabel lingkaran hijau-kuning di layar HP/Laptop
-        renderGridTable();
-    }).catch((error) => {
-        console.error("Gagal mengambil data dari Firebase: ", error);
-    });
-}
-
+        // AUTO-SAVE DATA LANGSUNG ONLINE KE CLOUD FIREBASE
         function saveBulanData() {
-            localStorage.setItem(`ASP_ROTASI_${currentBulanKey}`, JSON.stringify(stateRotasiAwal));
-            localStorage.setItem(`ASP_PANEN_${currentBulanKey}`, JSON.stringify(stateTitikPanen));
+            const dbRef = firebase.database().ref(`ASP_PLANTATION/${currentBulanKey}`);
+            dbRef.set({
+                rotasiAwal: stateRotasiAwal,
+                titikPanen: stateTitikPanen
+            }).then(() => {
+                console.log("Data sukses ter-sync online ke Firebase.");
+            }).catch((error) => {
+                console.error("Gagal sync online: ", error);
+            });
         }
 
         function gantiBulanOperasional() {
@@ -638,7 +582,7 @@ function loadBulanData() {
                 });
                 saveBulanData();
                 renderGridTable();
-                triggerToast("Data bulan ini dikosongkan.");
+                triggerToast("Data bulan ini dikosongkan secara online.");
             }
         }
 
@@ -711,6 +655,16 @@ function loadBulanData() {
             kalkulasiOtomatisSistem();
         }
 
+        function columnToLetter(column) {
+            let temp, letter = '';
+            while (column > 0) {
+                temp = (column - 1) % 26;
+                letter = String.fromCharCode(65 + temp) + letter;
+                column = (column - temp - 1) / 26;
+            }
+            return letter;
+        }
+
         function kalkulasiOtomatisSistem() {
             dataBlokKebun.forEach(b => {
                 let currentLoop = stateRotasiAwal[b.id];
@@ -731,9 +685,8 @@ function loadBulanData() {
                             if(d === 1) {
                                 const inp = td.querySelector('input');
                                 if(inp) {
+                                    inp.value = currentLoop;
                                     if(cellState === 'panen' || currentLoop === 1) {
-                                        currentLoop = 1;
-                                        inp.value = 1;
                                         td.classList.add("status-harvest");
                                     } else if(cellState === 'manual') {
                                         td.classList.add("status-manual");
@@ -762,7 +715,6 @@ function loadBulanData() {
 
         async function exportKeExcelBerwarna() {
             triggerToast("Sedang menyiapkan data Excel...");
-            
             const workbook = new ExcelJS.Workbook();
             const worksheet = workbook.addWorksheet('REKAP ROTASI');
 
@@ -781,17 +733,8 @@ function loadBulanData() {
             const headerRow = worksheet.getRow(1);
             headerRow.height = 26;
             headerRow.eachCell((cell) => {
-                cell.fill = {
-                    type: 'pattern',
-                    pattern: 'solid',
-                    fgColor: { argb: 'FACC15' }
-                };
-                cell.font = {
-                    name: 'Arial',
-                    size: 10,
-                    bold: true,
-                    color: { argb: '000000' }
-                };
+                cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FACC15' } };
+                cell.font = { name: 'Arial', size: 10, bold: true, color: { argb: '000000' } };
                 cell.alignment = { vertical: 'middle', horizontal: 'center' };
                 cell.border = {
                     top: { style: 'thin', color: { argb: 'CCCCCC' } },
@@ -811,11 +754,9 @@ function loadBulanData() {
                 };
 
                 let currentLoop = stateRotasiAwal[b.id] !== undefined ? stateRotasiAwal[b.id] : 13;
-                
                 for (let d = 1; d <= 31; d++) {
                     const cellState = stateTitikPanen[b.id][d];
                     if (cellState === 'panen') currentLoop = 1;
-                    
                     rowData['d_' + d] = currentLoop;
                     currentLoop++;
                 }
@@ -852,7 +793,6 @@ function loadBulanData() {
                         cell.font.color = { argb: '64748B' };
                         cell.font.bold = false;
                     }
-
                     loopCalc++;
                 }
             });
@@ -885,10 +825,5 @@ function loadBulanData() {
             setTimeout(() => { box.style.display = "none"; }, 2500);
         }
     </script>
-</body>
-</html>
-  <script>
-
-  </script>
 </body>
 </html>

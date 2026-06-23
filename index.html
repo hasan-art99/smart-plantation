@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASP Smart Plantation</title>
+  <style>
+
+  </style>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASP Smart Plantation - Modul Rotasi Divisi C</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <style>
+        /* TEMA PREMIUM MODERN - KHAS PERKEBUNAN SAWIT ASP */
+        :root {
+            --primary: #14532d;
+            --primary-light: #166534;
+            --accent: #22c55e;
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.08);
+            --bg-body: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            
+            /* Warna khusus Header */
+            --header-bg: #facc15; /* Kuning */
+            --header-text: #000000; /* Hitam */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* PAKSA LANDSCAPE FULL SCREEN ANTI-SCROLL UTAMA */
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TOPBAR NAVIGATION */
+        .topbar {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+
+        .brand-logo-area h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-logo-area p {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .badge-unit {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* CONTAINER UTAMA MENGISI SISA LAYAR */
+        .container {
+            padding: 12px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 0; 
+        }
+
+        /* PANEL FILTER & KONTROL */
+        .filter-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .search-box-wrapper {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .input-control {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            outline: none;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .input-control:focus {
+            background: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+        }
+
+        .select-control {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-action-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sawit {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-sawit-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-sawit-success {
+            background: #16a34a;
+            color: white;
+        }
+        .btn-sawit-success:hover { background: #15803d; }
+
+        .btn-sawit-light {
+            background: #e2e8f0;
+            color: var(--text-main);
+        }
+
+        /* GRID AREA TABEL MATRIKS */
+        .matrix-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .matrix-instruction {
+            background: #f8fafc;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .table-scroll-area {
+            flex: 1;
+            overflow: auto; 
+            min-height: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.8rem;
+        }
+
+        th, td {
+            padding: 8px 6px;
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid #f8fafc;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* STYLING HEADER BERWARNA KUNING & FONT HITAM */
+        th {
+            background: var(--header-bg) !important;
+            color: var(--header-text) !important;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        /* FITUR STICKY COLUMNS - MENGUNCI 5 KOLOM INFORMASI UTAMA */
+        .st-col-1 { position: sticky; left: 0; z-index: 5; background: #ffffff; min-width: 80px; font-weight: 700; color: var(--text-main); }
+        .st-col-2 { position: sticky; left: 80px; z-index: 5; background: #ffffff; min-width: 70px; color: #64748b; }
+        .st-col-3 { position: sticky; left: 150px; z-index: 5; background: #ffffff; min-width: 70px; color: #64748b; }
+        .st-col-4 { position: sticky; left: 220px; z-index: 5; background: #ffffff; min-width: 60px; color: #64748b; }
+        .st-col-5 { position: sticky; left: 280px; z-index: 5; background: #ffffff; min-width: 80px; font-weight: 600; color: #1e293b; border-right: 2px solid var(--border) !important; }
+
+        /* Aturan background header sticky agar tetap mengikuti warna kuning */
+        th.st-col-1, th.st-col-2, th.st-col-3, th.st-col-4, th.st-col-5 {
+            z-index: 15;
+            background: var(--header-bg) !important;
+            color: var(--header-text) !important;
+        }
+
+        .cell-day {
+            cursor: pointer;
+            min-width: 38px;
+            user-select: none;
+        }
+
+        /* PEMBUNGKUS BULAT UTAMA */
+        .bubble-wrapper {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #f1f5f9;
+            position: relative;
+            transition: all 0.15s ease;
+        }
+
+        /* INPUT DI TANGGAL 1 */
+        .input-rotasi-awal {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #475569;
+            outline: none;
+            padding: 0;
+            cursor: pointer;
+            -moz-appearance: textfield;
+        }
+        .input-rotasi-awal::-webkit-outer-spin-button,
+        .input-rotasi-awal::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* STATE WARNA */
+        .status-harvest .bubble-wrapper {
+            background: linear-gradient(135deg, #22c55e 0%, #166534 100%) !important;
+            box-shadow: 0 2px 6px rgba(34, 197, 94, 0.2);
+        }
+        .status-harvest .bubble-wrapper, 
+        .status-harvest .input-rotasi-awal {
+            color: white !important;
+            font-weight: 700 !important;
+        }
+
+        .status-manual .bubble-wrapper {
+            background: linear-gradient(135deg, #facc15 0%, #eab308 100%) !important;
+            box-shadow: 0 2px 6px rgba(234, 179, 8, 0.2);
+        }
+        .status-manual .bubble-wrapper,
+        .status-manual .input-rotasi-awal {
+            color: #1e293b !important;
+            font-weight: 700 !important;
+        }
+
+        .status-over .bubble-wrapper {
+            background-color: var(--danger-bg) !important;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .status-over .bubble-wrapper,
+        .status-over .input-rotasi-awal {
+            color: var(--danger) !important;
+            font-weight: 800 !important;
+        }
+
+        /* MODAL POPUP */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 420px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 12px 16px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .modal-body {
+            padding: 16px;
+        }
+
+        .grid-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-field.full-width {
+            grid-column: span 2;
+        }
+
+        .form-field label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .modal-footer {
+            background: #f8fafc;
+            padding: 10px 16px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* TOAST ALERT NOTIFICATION */
+        .toast-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #0f172a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            display: none;
+            z-index: 3000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <header class="topbar">
+        <div class="brand-logo-area">
+            <h1>ASP Smart Plantation</h1>
+            <p>Sistem Pemantauan Rotasi Panen Kelapa Sawit</p>
+        </div>
+        <div class="badge-unit">Divisi C — PT Antang Sawit Perkasa</div>
+    </header>
+
+    <div class="container">
+        
+        <div class="filter-card">
+            <div class="search-box-wrapper">
+                <input type="text" id="searchBlok" class="input-control" placeholder="Ketik Kode Blok (Contoh: SN-6, SO-12)...">
+                <select id="filterBulan" class="select-control" onchange="gantiBulanOperasional()">
+                    <option value="2026-01">Januari 2026</option>
+                    <option value="2026-02">Februari 2026</option>
+                    <option value="2026-03">Maret 2026</option>
+                    <option value="2026-04">April 2026</option>
+                    <option value="2026-05">Mei 2026</option>
+                    <option value="2026-06" selected>Juni 2026</option>
+                    <option value="2026-07">Juli 2026</option>
+                    <option value="2026-08">Agustus 2026</option>
+                    <option value="2026-09">September 2026</option>
+                    <option value="2026-10">Oktober 2026</option>
+                    <option value="2026-11">November 2026</option>
+                    <option value="2026-12">Desember 2026</option>
+                </select>
+            </div>
+            <div class="btn-action-group">
+                <button class="btn-sawit btn-sawit-light" onclick="resetBulanIni()">Reset Bulan Ini</button>
+                <button class="btn-sawit btn-sawit-success" onclick="exportKeExcelBerwarna()">📥 Export Excel</button>
+            </div>
+        </div>
+            <div class="table-scroll-area">
+                <table id="mainTable">
+                    <thead>
+                        <tr id="headerDatesRow">
+                            <th class="st-col-1">Kode Blok</th>
+                            <th class="st-col-2">Thn Tanam</th>
+                            <th class="st-col-3">Luas (Ha)</th>
+                            <th class="st-col-4">SPH</th>
+                            <th class="st-col-5">Pokok</th>
+                            </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-overlay" id="modalInput">
+        <div class="modal-container">
+            <div class="modal-header">
+                <span>Rekap Hasil Lapangan</span>
+                <span style="cursor:pointer; font-size: 1.2rem;" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="grid-form">
+                    <div class="form-field">
+                        <label>Identitas Blok</label>
+                        <input type="text" id="formBlok" class="input-control" style="background:#f1f5f9" readonly>
+                    </div>
+                    <div class="form-field">
+                        <label>Tanggal Realisasi</label>
+                        <input type="text" id="formTanggal" class="input-control" style="background:#f1f5f9" readonly>
+                    </div>
+                    <div class="form-field full-width">
+                        <label>Mandor Panen Lapangan</label>
+                        <select class="select-control" style="width: 100%;">
+                            <option>Mandor Hasan</option>
+                            <option>Mandor Ahmad</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label>HK (Tenaga Kerja)</label>
+                        <input type="number" id="formHk" value="4" class="input-control">
+                    </div>
+                    <div class="form-field">
+                        <label>JJG (Jumlah Janjang)</label>
+                        <input type="number" id="formJjg" value="350" class="input-control">
+                    </div>
+                    <div class="form-field full-width">
+                        <label>Estimasi Tonase (Kg)</label>
+                        <input type="number" id="formKg" value="4800" class="input-control">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-sawit btn-sawit-light" onclick="closeModal()">Batal</button>
+                <button class="btn-sawit btn-sawit-primary" onclick="saveForm()">Simpan Berkas</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-popup" id="toastBox">Notifikasi sistem</div>
+
+    <script>
+        // MASTER DATA LENGKAP 35 BLOK DIVISI C
+        const dataBlokKebun = [
+            { id: 1, blok: "SN-6", thn: 2008, luas: 3.13, sph: 158, pokok: 496 },
+            { id: 2, blok: "SN-7", thn: 2008, luas: 3.56, sph: 141, pokok: 503 },
+            { id: 3, blok: "SN-8", thn: 2008, luas: 3.15, sph: 140, pokok: 440 },
+            { id: 4, blok: "SN-9", thn: 2008, luas: 3.63, sph: 138, pokok: 500 },
+            { id: 5, blok: "SN-10", thn: 2008, luas: 5.39, sph: 130, pokok: 703 },
+            { id: 6, blok: "SO-8", thn: 2008, luas: 26.59, sph: 115, pokok: 3057 },
+            { id: 7, blok: "SO-9", thn: 2008, luas: 11.74, sph: 125, pokok: 1464 },
+            { id: 8, blok: "SO-10", thn: 2008, luas: 25.56, sph: 122, pokok: 3120 },
+            { id: 9, blok: "SO-11", thn: 2008, luas: 29.04, sph: 129, pokok: 3737 },
+            { id: 10, blok: "SO-12", thn: 2008, luas: 30.19, sph: 125, pokok: 3766 },
+            { id: 11, blok: "SO-13", thn: 2008, luas: 28.18, sph: 129, pokok: 3644 },
+            { id: 12, blok: "SO-14", thn: 2008, luas: 29.36, sph: 136, pokok: 3988 },
+            { id: 13, blok: "SO-15", thn: 2008, luas: 29.23, sph: 139, pokok: 4056 },
+            { id: 14, blok: "SO-16", thn: 2008, luas: 29.64, sph: 143, pokok: 4226 },
+            { id: 15, blok: "SO-17", thn: 2008, luas: 28.64, sph: 144, pokok: 4127 },
+            { id: 16, blok: "SO-18", thn: 2008, luas: 29.55, sph: 152, pokok: 4499 },
+            { id: 17, blok: "SO-19", thn: 2008, luas: 29.31, sph: 151, pokok: 4430 },
+            { id: 18, blok: "SO-20", thn: 2008, luas: 24.24, sph: 148, pokok: 3593 },
+            { id: 19, blok: "SP-20", thn: 2008, luas: 30.67, sph: 148, pokok: 4536 },
+            { id: 20, blok: "SP-19", thn: 2008, luas: 28.32, sph: 148, pokok: 4205 },
+            { id: 21, blok: "SP-18", thn: 2008, luas: 28.99, sph: 148, pokok: 4285 },
+            { id: 22, blok: "SP-17", thn: 2008, luas: 26.60, sph: 152, pokok: 4055 },
+            { id: 23, blok: "SP-16", thn: 2008, luas: 28.22, sph: 156, pokok: 4412 },
+            { id: 24, blok: "SP-15", thn: 2008, luas: 28.10, sph: 150, pokok: 4221 },
+            { id: 25, blok: "SP-14", thn: 2008, luas: 28.99, sph: 142, pokok: 4122 },
+            { id: 26, blok: "SP-13", thn: 2008, luas: 25.30, sph: 147, pokok: 3707 },
+            { id: 27, blok: "SP-12", thn: 2008, luas: 30.59, sph: 140, pokok: 4295 },
+            { id: 28, blok: "SP-11", thn: 2008, luas: 27.81, sph: 131, pokok: 3635 },
+            { id: 29, blok: "SQ-15", thn: 2008, luas: 28.91, sph: 137, pokok: 3966 },
+            { id: 30, blok: "SQ-16", thn: 2008, luas: 29.06, sph: 130, pokok: 3787 },
+            { id: 31, blok: "SQ-17", thn: 2008, luas: 26.77, sph: 130, pokok: 3483 },
+            { id: 32, blok: "SQ-18", thn: 2008, luas: 30.14, sph: 129, pokok: 3896 },
+            { id: 33, blok: "SQ-19", thn: 2008, luas: 29.19, sph: 131, pokok: 3836 },
+            { id: 34, blok: "SQ-20", thn: 2008, luas: 27.40, sph: 136, pokok: 3725 },
+            { id: 35, blok: "SQ-21", thn: 2008, luas: 12.26, sph: 136, pokok: 1669 }
+        ];
+
+        let currentBulanKey = "2026-06"; 
+        let stateRotasiAwal = {};
+        let stateTitikPanen = {};
+
+        window.onload = function() {
+            const headerRow = document.getElementById("headerDatesRow");
+            for(let d=1; d<=31; d++) {
+                const th = document.createElement("th");
+                th.innerText = d;
+                headerRow.appendChild(th);
+            }
+
+            loadBulanData(); 
+
+            document.getElementById("searchBlok").addEventListener("input", function(e) {
+                renderGridTable(e.target.value);
+            });
+        };
+
+        function loadBulanData() {
+            currentBulanKey = document.getElementById("filterBulan").value;
+            const savedRotasi = localStorage.getItem(`ASP_ROTASI_${currentBulanKey}`);
+            const savedPanen = localStorage.getItem(`ASP_PANEN_${currentBulanKey}`);
+
+            stateRotasiAwal = savedRotasi ? JSON.parse(savedRotasi) : {};
+            stateTitikPanen = savedPanen ? JSON.parse(savedPanen) : {};
+
+            dataBlokKebun.forEach(b => {
+                if (stateRotasiAwal[b.id] === undefined) stateRotasiAwal[b.id] = 13;
+                if (!stateTitikPanen[b.id]) stateTitikPanen[b.id] = Array(32).fill(null);
+            });
+            renderGridTable();
+        }
+
+        function saveBulanData() {
+            localStorage.setItem(`ASP_ROTASI_${currentBulanKey}`, JSON.stringify(stateRotasiAwal));
+            localStorage.setItem(`ASP_PANEN_${currentBulanKey}`, JSON.stringify(stateTitikPanen));
+        }
+
+        function gantiBulanOperasional() {
+            loadBulanData();
+            triggerToast(`Lembar kerja berganti ke Bulan: ${currentBulanKey}`);
+        }
+
+        function resetBulanIni() {
+            if(confirm("Apakah Anda yakin ingin menghapus seluruh tanda rotasi pada bulan ini?")) {
+                dataBlokKebun.forEach(b => {
+                    stateRotasiAwal[b.id] = 13;
+                    stateTitikPanen[b.id] = Array(32).fill(null);
+                });
+                saveBulanData();
+                renderGridTable();
+                triggerToast("Data bulan ini dikosongkan.");
+            }
+        }
+
+        function renderGridTable(keyword = "") {
+            const tbody = document.getElementById("tableBody");
+            tbody.innerHTML = "";
+
+            const filtered = dataBlokKebun.filter(b => b.blok.toLowerCase().includes(keyword.toLowerCase()));
+
+            filtered.forEach(b => {
+                const tr = document.createElement("tr");
+                tr.setAttribute("data-id", b.id);
+
+                tr.innerHTML = `
+                    <td class="st-col-1">${b.blok}</td>
+                    <td class="st-col-2">${b.thn}</td>
+                    <td class="st-col-3">${b.luas}</td>
+                    <td class="st-col-4">${b.sph}</td>
+                    <td class="st-col-5">${b.pokok.toLocaleString('id-ID')}</td>
+                `;
+
+                for(let d=1; d<=31; d++) {
+                    const td = document.createElement("td");
+                    td.className = "cell-day";
+                    td.setAttribute("data-day", d);
+
+                    if(d === 1) {
+                        td.innerHTML = `
+                            <div class="bubble-wrapper">
+                                <input type="number" class="input-rotasi-awal" value="${stateRotasiAwal[b.id]}" oninput="updateRotasiAwal(${b.id}, this.value)">
+                            </div>`;
+                    } else {
+                        td.innerHTML = `<div class="bubble-wrapper">-</div>`;
+                    }
+
+                    td.addEventListener("click", function(e) {
+                        if(e.target.tagName === 'INPUT') return;
+                        togglePanenState(b.id, d);
+                    });
+
+                    td.addEventListener("contextmenu", function(e) {
+                        e.preventDefault();
+                        openModalInput(b.blok, d);
+                    });
+
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            });
+
+            kalkulasiOtomatisSistem();
+        }
+
+        function updateRotasiAwal(id, val) {
+            stateRotasiAwal[id] = parseInt(val) || 1;
+            saveBulanData();
+            kalkulasiOtomatisSistem();
+        }
+
+        function togglePanenState(id, d) {
+            const currentState = stateTitikPanen[id][d];
+            if (currentState === null) {
+                stateTitikPanen[id][d] = 'panen';   
+            } else if (currentState === 'panen') {
+                stateTitikPanen[id][d] = 'manual';  
+            } else {
+                stateTitikPanen[id][d] = null;      
+            }
+            saveBulanData();
+            kalkulasiOtomatisSistem();
+        }
+
+        function kalkulasiOtomatisSistem() {
+            dataBlokKebun.forEach(b => {
+                let currentLoop = stateRotasiAwal[b.id];
+
+                for(let d=1; d<=31; d++) {
+                    const cellState = stateTitikPanen[b.id][d];
+
+                    if(cellState === 'panen') {
+                        currentLoop = 1;
+                    }
+
+                    const tr = document.querySelector(`tr[data-id='${b.id}']`);
+                    if(tr) {
+                        const td = tr.querySelector(`td[data-day='${d}']`);
+                        if(td) {
+                            td.className = "cell-day";
+                            
+                            if(d === 1) {
+                                const inp = td.querySelector('input');
+                                if(inp) {
+                                    if(cellState === 'panen' || currentLoop === 1) {
+                                        currentLoop = 1;
+                                        inp.value = 1;
+                                        td.classList.add("status-harvest");
+                                    } else if(cellState === 'manual') {
+                                        td.classList.add("status-manual");
+                                    } else if(currentLoop > 10) {
+                                        td.classList.add("status-over");
+                                    }
+                                }
+                            } else {
+                                const wrap = td.querySelector('.bubble-wrapper');
+                                if(wrap) wrap.innerText = currentLoop;
+
+                                if(cellState === 'panen') {
+                                    td.classList.add("status-harvest");
+                                } else if(cellState === 'manual') {
+                                    td.classList.add("status-manual"); 
+                                } else if(currentLoop > 10) {
+                                    td.classList.add("status-over");
+                                }
+                            }
+                        }
+                    }
+                    currentLoop++;
+                }
+            });
+        }
+
+        async function exportKeExcelBerwarna() {
+            triggerToast("Sedang menyiapkan data Excel...");
+            
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('REKAP ROTASI');
+
+            const columnsDef = [
+                { header: 'KODE BLOK', key: 'blok', width: 14 },
+                { header: 'THN TANAM', key: 'thn', width: 12 },
+                { header: 'LUAS (HA)', key: 'luas', width: 12 },
+                { header: 'SPH', key: 'sph', width: 10 },
+                { header: 'POKOK', key: 'pokok', width: 12 }
+            ];
+            for (let d = 1; d <= 31; d++) {
+                columnsDef.push({ header: String(d), key: 'd_' + d, width: 6 });
+            }
+            worksheet.columns = columnsDef;
+
+            const headerRow = worksheet.getRow(1);
+            headerRow.height = 26;
+            headerRow.eachCell((cell) => {
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FACC15' }
+                };
+                cell.font = {
+                    name: 'Arial',
+                    size: 10,
+                    bold: true,
+                    color: { argb: '000000' }
+                };
+                cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                cell.border = {
+                    top: { style: 'thin', color: { argb: 'CCCCCC' } },
+                    left: { style: 'thin', color: { argb: 'CCCCCC' } },
+                    bottom: { style: 'medium', color: { argb: '000000' } },
+                    right: { style: 'thin', color: { argb: 'CCCCCC' } }
+                };
+            });
+
+            dataBlokKebun.forEach((b) => {
+                const rowData = {
+                    blok: b.blok,
+                    thn: b.thn,
+                    luas: b.luas,
+                    sph: b.sph,
+                    pokok: b.pokok
+                };
+
+                let currentLoop = stateRotasiAwal[b.id] !== undefined ? stateRotasiAwal[b.id] : 13;
+                
+                for (let d = 1; d <= 31; d++) {
+                    const cellState = stateTitikPanen[b.id][d];
+                    if (cellState === 'panen') currentLoop = 1;
+                    
+                    rowData['d_' + d] = currentLoop;
+                    currentLoop++;
+                }
+
+                const newRow = worksheet.addRow(rowData);
+                newRow.height = 22;
+
+                for (let colIdx = 1; colIdx <= 5; colIdx++) {
+                    const cell = newRow.getCell(colIdx);
+                    cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                    cell.font = { name: 'Arial', size: 10 };
+                    if(colIdx === 1) cell.font.bold = true;
+                }
+
+                let loopCalc = stateRotasiAwal[b.id] !== undefined ? stateRotasiAwal[b.id] : 13;
+                for (let d = 1; d <= 31; d++) {
+                    const cellState = stateTitikPanen[b.id][d];
+                    if (cellState === 'panen') loopCalc = 1;
+
+                    const cell = newRow.getCell(5 + d);
+                    cell.alignment = { vertical: 'middle', horizontal: 'center' };
+                    cell.font = { name: 'Arial', size: 10, bold: true };
+
+                    if (cellState === 'panen') {
+                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: '22C55E' } };
+                        cell.font.color = { argb: 'FFFFFF' };
+                    } else if (cellState === 'manual') {
+                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FACC15' } };
+                        cell.font.color = { argb: '000000' };
+                    } else if (loopCalc > 10) {
+                        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FEE2E2' } };
+                        cell.font.color = { argb: 'EF4444' };
+                    } else {
+                        cell.font.color = { argb: '64748B' };
+                        cell.font.bold = false;
+                    }
+
+                    loopCalc++;
+                }
+            });
+
+            const buffer = await workbook.xlsx.writeBuffer();
+            const fileName = `ROTASI_PANEN_DIVISI_C_${currentBulanKey}.xlsx`;
+            saveAs(new Blob([buffer]), fileName);
+            triggerToast("Excel sukses diunduh!");
+        }
+
+        function openModalInput(blok, hari) {
+            document.getElementById("formBlok").value = blok;
+            document.getElementById("formTanggal").value = hari + " " + document.getElementById("filterBulan").options[document.getElementById("filterBulan").selectedIndex].text;
+            document.getElementById("modalInput").style.display = "flex";
+        }
+
+        function closeModal() { 
+            document.getElementById("modalInput").style.display = "none"; 
+        }
+        
+        function saveForm() { 
+            closeModal(); 
+            triggerToast("Laporan produksi sukses terekam."); 
+        }
+        
+        function triggerToast(msg) {
+            const box = document.getElementById("toastBox");
+            box.innerText = msg; 
+            box.style.display = "block";
+            setTimeout(() => { box.style.display = "none"; }, 2500);
+        }
+    </script>
+</body>
+</html>
+  <script>
+
+  </script>
+</body>
+</html>

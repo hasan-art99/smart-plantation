@@ -366,12 +366,17 @@
 </head>
 <body>
 
-    <header class="topbar">
+<header class="topbar">
         <div class="brand-logo-area">
             <h1>ASP Smart Plantation</h1>
-            <p>Sistem Pemantauan Rotasi Panen Kelapa Sawit</p>
+            <p>Sistem Rotasi Panen Kelapa Sawit</p>
         </div>
-        <div class="badge-unit">Divisi C — PT Antang Sawit Perkasa</div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div id="realtimeClock" style="font-size: 0.8rem; font-weight: 600; text-align: right; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); letter-spacing: 0.5px;">
+                Memuat Waktu...
+            </div>
+            <div class="badge-unit">Divisi C — Sei Kapar</div>
+        </div>
     </header>
 
     <div class="container">
@@ -522,7 +527,7 @@
             firebase.initializeApp(firebaseConfig);
         }
 
-        window.onload = function() {
+window.onload = function() {
             const headerRow = document.getElementById("headerDatesRow");
             for(let d=1; d<=31; d++) {
                 const th = document.createElement("th");
@@ -531,11 +536,38 @@
             }
 
             loadBulanData(); 
+            
+            // Panggil fungsi jam realtime di sini
+            jalankanJamRealtime();
 
             document.getElementById("searchBlok").addEventListener("input", function(e) {
                 renderGridTable(e.target.value);
             });
         };
+
+        // FUNGSI UTAMA JAM & TANGGAL REALTIME BERJALAN DETIK DEMI DETIK
+        function jalankanJamRealtime() {
+            function updateWaktu() {
+                const sekarang = new Date();
+                
+                // Format Tanggal Indonesia
+                const opsiTanggal = { day: 'numeric', month: 'long', year: 'numeric' };
+                const formatTanggal = sekarang.toLocaleDateString('id-ID', opsiTanggal);
+                
+                // Format Jam, Menit, Detik Angka Ganda (00:00:00)
+                const jam = String(sekarang.getHours()).padStart(2, '0');
+                const menit = String(sekarang.getMinutes()).padStart(2, '0');
+                const detik = String(sekarang.getSeconds()).padStart(2, '0');
+                
+                // Gabungkan teks untuk ditampilkan ke layar web
+                document.getElementById("realtimeClock").innerHTML = `📅 ${formatTanggal} &nbsp; ⏰ ${jam}:${menit}:${detik} WIB`;
+            }
+            
+            // Jalankan pertama kali saat web dibuka
+            updateWaktu();
+            // Perbarui otomatis setiap 1000 milidetik (1 detik) sekali secara konstan
+            setInterval(updateWaktu, 1000);
+        }
 
         // FUNGSI LOAD DATA ONLINE (SUDAH DIPERBAIKI SINTAKSNYA)
         function loadBulanData() {
